@@ -1,0 +1,3 @@
+in_product_family,in_bounding_box_x1,in_bounding_box_y1,in_bounding_box_x2,in_bounding_box_y2,in_bounding_box_x3,in_bounding_box_y3,in_bounding_box_x4,in_bounding_box_y4,out_bounding_box_x1,out_bounding_box_y1,out_bounding_box_x2,out_bounding_box_y2,out_bounding_box_x3,out_bounding_box_y3,out_bounding_box_x4,out_bounding_box_y4
+ROOM,-198.48648,-742.7194,199.51352,-742.7194,199.51352,15.43352,-198.48648,15.43352,-198.48648,-742.7194,199.51352,-742.7194,199.51352,15.43352,-198.48648,15.43352
+RADIATOR,-33.5,-2.5,33.5,-2.5,33.5,2.5,-33.5,2.5,-44.682533264160156,15.423515319824222,-111.68253326416016,15.423515319824215,-111.68253326416016,10.423515319824215,-44.682533264160156,10.423515319824222

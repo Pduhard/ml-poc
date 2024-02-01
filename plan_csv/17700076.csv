@@ -1,0 +1,3 @@
+in_product_family,in_bounding_box_x1,in_bounding_box_y1,in_bounding_box_x2,in_bounding_box_y2,in_bounding_box_x3,in_bounding_box_y3,in_bounding_box_x4,in_bounding_box_y4,out_bounding_box_x1,out_bounding_box_y1,out_bounding_box_x2,out_bounding_box_y2,out_bounding_box_x3,out_bounding_box_y3,out_bounding_box_x4,out_bounding_box_y4
+ROOM,-1118.1433,-392.15942,-464.43714,-392.15942,-464.43714,147.84058,-1118.1433,147.84058,-1118.1433,-392.15942,-464.43714,-392.15942,-464.43714,147.84058,-1118.1433,147.84058
+SOFA,-99,-48.5,99,-48.5,99,48.5,-99,48.5,-715.1031494140625,-213.8596649169922,-715.1031494140625,-15.859664916992202,-812.1031494140625,-15.859664916992173,-812.1031494140625,-213.8596649169922

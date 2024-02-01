@@ -1,0 +1,3 @@
+in_product_family,in_bounding_box_x1,in_bounding_box_y1,in_bounding_box_x2,in_bounding_box_y2,in_bounding_box_x3,in_bounding_box_y3,in_bounding_box_x4,in_bounding_box_y4,out_bounding_box_x1,out_bounding_box_y1,out_bounding_box_x2,out_bounding_box_y2,out_bounding_box_x3,out_bounding_box_y3,out_bounding_box_x4,out_bounding_box_y4
+ROOM,-42.91252,-84,704.01,-84,704.01,706.01,-42.91252,706.01,-42.91252,-84,704.01,-84,704.01,706.01,-42.91252,706.01
+SEATING,-27.7,-28.6,27.7,-28.6,27.7,28.6,-27.7,28.6,560.5279174804688,124.76389770507812,560.5279174804688,180.1638977050781,503.3279174804687,180.1638977050781,503.3279174804687,124.76389770507812
