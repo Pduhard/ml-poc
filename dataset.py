@@ -10,9 +10,17 @@ class PopulationDataset(Dataset):
         self.room_df = pd.DataFrame()
         self.max_models = max_models
 
-        self.product_family_label_csv = pd.read_csv(product_family_label_csv)
-        # as string self.product_family_label_csv.ProductFamily.values
-        self.all_labels = pd.Categorical(self.product_family_label_csv.ProductFamily.values)
+        self.all_labels =[
+            'RADIATOR',
+            'ARMCHAIR',
+            'VEGETATION',
+            'TABLE',
+            'LIGHTING',
+            'STORAGE_FURNITURE',
+            'DECORATION',
+            'SOFA',
+            'SEATING',
+        ]
 
         # print(len(self.product_family_label_csv))
         self.room_csv_dir = room_csv_dir
@@ -34,11 +42,11 @@ class PopulationDataset(Dataset):
         np_target = np.zeros((self.max_models * 8 + 8))
         np_target[:roomCsv.shape[0] * 8] = roomCsv.iloc[:, 9:17].to_numpy().flatten()
 
-        input_labels = np.zeros((self.max_models, len(self.product_family_label_csv)))
+        input_labels = np.zeros((self.max_models, len(self.all_labels)))
         # print(input_labels.shape)
 
         for index, label in enumerate(pd.Categorical(roomCsv.in_product_family.values)[1:]):
-            input_labels[index, 1] = 1. # TODO FIX label index
+            input_labels[index, self.all_labels.index(label)] = 1. # TODO FIX label index
         
         label_sample = input_labels.flatten()
         

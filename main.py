@@ -25,14 +25,15 @@ if __name__ == "__main__":
     print(dataset[0][0].shape[0])
     print(dataset[0][1].shape[0])
 
+    train_data, test_data = random_split(dataset, [int(len(dataset) * 0.8), int(len(dataset) * 0.2)])
+    train_dataloader = DataLoader(train_data, batch_size=4, shuffle=True)
+    test_dataloader = DataLoader(test_data, batch_size=4, shuffle=True)
+
     #setup optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    for epoch in range(1):
-
+    for epoch in range(15):
         # print(f'Epoch {epoch + 1}\n-------------------------------')
-        train_data, test_data = random_split(dataset, [int(len(dataset) * 0.8), int(len(dataset) * 0.2)])
-        train_dataloader = DataLoader(train_data, batch_size=4, shuffle=True)
 
         ttloss = 0
         for batch, (train_features, train_targets) in enumerate(train_dataloader):
@@ -55,7 +56,6 @@ if __name__ == "__main__":
         ttloss = 0
 
         # validation
-        test_dataloader = DataLoader(test_data, batch_size=4, shuffle=True)
         for batch, (test_features, test_targets) in enumerate(test_dataloader):
             test_features, test_targets = test_features.to(device), test_targets.to(device)
 
@@ -69,6 +69,8 @@ if __name__ == "__main__":
 
     print('Done!')
     model.save("model.pt")
+
+
 
     dummy_input = torch.randn(dataset[0][0].shape[0], dtype=torch.float64)
     torch.onnx.export(model,               # model being run
