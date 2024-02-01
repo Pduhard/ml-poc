@@ -24,6 +24,8 @@ class PopulationDataset(Dataset):
     def __getitem__(self, idx):
         roomCsv = pd.read_csv(self.room_csv_dir + "/" + self.csvFiles[idx])
         ## keep only the first 200 models + 1
+        if (roomCsv.shape[0] > 51):
+            print(self.room_csv_dir + '/' + self.csvFiles[idx])
         roomCsv = roomCsv.iloc[:self.max_models + 1, :]
 
         np_sample = np.zeros((self.max_models * 8 + 8))
