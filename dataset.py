@@ -6,7 +6,7 @@ import numpy as np
 from torch.utils.data import Dataset
 
 class PopulationDataset(Dataset):
-    def __init__(self, room_csv_dir, product_family_label_csv, max_models=30):
+    def __init__(self, room_csv_dir, product_family_label_csv, max_models=50):
         self.room_df = pd.DataFrame()
         self.max_models = max_models
 
@@ -24,7 +24,7 @@ class PopulationDataset(Dataset):
     def __getitem__(self, idx):
         roomCsv = pd.read_csv(self.room_csv_dir + "/" + self.csvFiles[idx])
         ## keep only the first 200 models + 1
-        if (roomCsv.shape[0] > 51):
+        if (roomCsv.shape[0] > 50):
             print(self.room_csv_dir + '/' + self.csvFiles[idx])
         roomCsv = roomCsv.iloc[:self.max_models + 1, :]
 
