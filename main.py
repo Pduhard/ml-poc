@@ -32,7 +32,7 @@ if __name__ == "__main__":
     #setup optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    for epoch in range(15):
+    for epoch in range(3):
         # print(f'Epoch {epoch + 1}\n-------------------------------')
 
         ttloss = 0
@@ -71,16 +71,19 @@ if __name__ == "__main__":
     model.save("model.pt")
 
 
-
     dummy_input = torch.randn(dataset[0][0].shape[0], dtype=torch.float64)
-    torch.onnx.export(model,               # model being run
-                  dummy_input,                         # model input (or a tuple for multiple inputs)
-                  "population-model.onnx",   # where to save the model (can be a file or file-like object)
-                  export_params=True,        # store the trained parameter weights inside the model file
-                  opset_version=10,          # the ONNX version to export the model to
-                  do_constant_folding=True,  # whether to execute constant folding for optimization
-                  input_names = ['input'],   # the model's input names
-                  output_names = ['output'], # the model's output names
-                  dynamic_axes={'input' : {0 : 'batch_size'},    # variable length axes
-                                'output' : {0 : 'batch_size'}}
-    )
+    print(dummy_input.shape)
+    onnx_program = torch.onnx.dynamo_export(model, dummy_input)
+    onnx_program.save("population-model.onnx")
+
+    # torch.onnx.export(model,               # model being run
+    #               dummy_input,                         # model input (or a tuple for multiple inputs)
+    #               "population-model.onnx",   # where to save the model (can be a file or file-like object)
+    #               export_params=True,        # store the trained parameter weights inside the model file
+    #               opset_version=10,          # the ONNX version to export the model to
+    #               do_constant_folding=True,  # whether to execute constant folding for optimization
+    #               input_names = ['input'],   # the model's input names
+    #               output_names = ['output'], # the model's output names
+    #               dynamic_axes={'input' : {0 : 'batch_size'},    # variable length axes
+    #                             'output' : {0 : 'batch_size'}}
+    # )
