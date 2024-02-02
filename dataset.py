@@ -36,7 +36,7 @@ class PopulationDataset(Dataset):
             print("rm " + self.room_csv_dir + "/" + self.csvFiles[idx] + " && ", end="")
         roomCsv = roomCsv.iloc[:self.max_models + 1, :]
 
-        np_bb_sample = np.zeros((s²elf.max_models * 8 + 8))
+        np_bb_sample = np.zeros((self.max_models * 8 + 8))
         np_bb_sample[:roomCsv.shape[0] * 8] = roomCsv.iloc[:, 1:9].to_numpy().flatten()
 
         np_bb_target = np.zeros((self.max_models * 8 + 8))
@@ -90,25 +90,30 @@ class PopulationDataset(Dataset):
         out4[::2] = reversed_value_np_bb_sample_norm_x
         out4[1::2] = np_bb_sample_norm_y
 
-        # ## 90° rotation
-        # s = np.sin(np.pi / 2)
-        # c = np.cos(np.pi / 2)
+        ## 90° rotation
+        s = np.sin(np.pi / 2)
+        c = np.cos(np.pi / 2)
 
-        # rotationed2 = np.zeros((self.max_models * 8 + 8))
-        # rotationed2[::2] = np_bb_sample_norm_x * c - np_bb_sample_norm_y * s
-        # rotationed2[1::2] = np_bb_sample_norm_x * s + np_bb_sample_norm_y * c
+        rotationed2 = np.zeros((self.max_models * 8 + 8))
+        rotationed2[::2] = np_bb_sample_norm_x * c - np_bb_sample_norm_y * s
+        rotationed2[1::2] = np_bb_sample_norm_x * s + np_bb_sample_norm_y * c
 
-        # ## 180 rotation
-        # s = np.sin(np.pi)
-        # c = np.cos(np.pi)
+        ## 180 rotation
+        s = np.sin(np.pi)
+        c = np.cos(np.pi)
 
-        # rotationed3 = np.zeros((self.max_models * 8 + 8))
-        # rotationed3[::2] = np_bb_sample_norm_x * c - np_bb_sample_norm_y * s
-        # rotationed3[1::2] = np_bb_sample_norm_x * s + np_bb_sample_norm_y * c
+        rotationed3 = np.zeros((self.max_models * 8 + 8))
+        rotationed3[::2] = np_bb_sample_norm_x * c - np_bb_sample_norm_y * s
+        rotationed3[1::2] = np_bb_sample_norm_x * s + np_bb_sample_norm_y * c
         
-        # # rotation
-        # out5 = np.zeros((self.max_models * 8 + 8))
-        # out5[::2] = 
+        ## 270 rotation
+        s = np.sin(3 * np.pi / 2)
+        c = np.cos(3 * np.pi / 2)
+
+        rotationed4 = np.zeros((self.max_models * 8 + 8))
+        rotationed4[::2] = np_bb_sample_norm_x * c - np_bb_sample_norm_y * s
+        rotationed4[1::2] = np_bb_sample_norm_x * s + np_bb_sample_norm_y * c
+
         # print(reversed_value_np_bb_sample_norm_x)
         # print(reversed_value_np_bb_sample_norm_y)
         ## rebuild a bb_target_norm with np_bb_sample_norm_x and reversed_value_np_bb_sample_norm_y
@@ -117,8 +122,11 @@ class PopulationDataset(Dataset):
         position_output2 = torch.tensor(out2, dtype=torch.float32)
         position_output3 = torch.tensor(out3, dtype=torch.float32)
         position_output4 = torch.tensor(out4, dtype=torch.float32)
+        position_output5 = torch.tensor(rotationed2, dtype=torch.float32)
+        position_output6 = torch.tensor(rotationed3, dtype=torch.float32)
+        position_output7 = torch.tensor(rotationed4, dtype=torch.float32)
 
-        position_output = torch.cat((position_output1, position_output2, position_output3, position_output4), 0)
+        position_output = torch.cat((position_output1, position_output2, position_output3, position_output4, position_output5, position_output6, position_output7), 0)
         sample = torch.cat((position_input, object_types), 0)
 
         return sample, position_output

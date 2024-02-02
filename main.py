@@ -29,14 +29,13 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    for epoch in range(12):
+    for epoch in range(30):
         total_loss = 0
         for batch, (train_features, train_targets) in enumerate(train_dataloader):
             # Compute prediction error
             pred = model(train_features)
             loss = torch.nn.functional.mse_loss(pred, train_targets)
             total_loss += loss.item()
-            print(f'Epoch {epoch + 1} batch {batch} loss: {loss.item()}')
             # Back propagation
             optimizer.zero_grad()
             loss.backward()

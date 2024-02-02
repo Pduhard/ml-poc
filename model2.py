@@ -24,7 +24,7 @@ class RoomPopulationModel2(nn.Module):
             nn.ReLU(),
             nn.Linear(1024, 256, dtype=torch.float32),
             nn.ReLU(),
-            nn.Linear(256, (max_objects + 1) * 8 * 4, dtype=torch.float32)
+            nn.Linear(256, (max_objects + 1) * 8 * 7, dtype=torch.float32)
         )
 
         self.max_objects = max_objects
