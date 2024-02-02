@@ -68,8 +68,8 @@ class PopulationDataset(Dataset):
         position_input = torch.tensor(np_bb_sample_norm, dtype=torch.float32)
         object_types = torch.tensor(label_sample, dtype=torch.float32)
 
-        np_bb_sample_norm_x = np_bb_sample_norm[::2]
-        np_bb_sample_norm_y = np_bb_sample_norm[1::2]
+        np_bb_sample_norm_x = np_bb_target_norm[::2]
+        np_bb_sample_norm_y = np_bb_target_norm[1::2]
 
         reversed_value_np_bb_sample_norm_x = np.max(np_bb_sample_norm_x) - np_bb_sample_norm_x + np.min(np_bb_sample_norm_x)
         reversed_value_np_bb_sample_norm_y = np.max(np_bb_sample_norm_y) - np_bb_sample_norm_y + np.min(np_bb_sample_norm_y)
