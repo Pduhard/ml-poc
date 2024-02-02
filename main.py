@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    for epoch in range(30):
+    for epoch in range(20):
         total_loss = 0
         for batch, (train_features, train_targets) in enumerate(train_dataloader):
             # Compute prediction error
