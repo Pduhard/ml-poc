@@ -5,12 +5,13 @@ import numpy as np
 
 from torch.utils.data import Dataset
 
+
 class PopulationDataset(Dataset):
     def __init__(self, room_csv_dir, product_family_label_csv, max_models=50):
         self.room_df = pd.DataFrame()
         self.max_models = max_models
 
-        self.all_labels =[
+        self.all_labels = [
             'RADIATOR',
             'ARMCHAIR',
             'VEGETATION',
@@ -25,6 +26,12 @@ class PopulationDataset(Dataset):
         # print(len(self.product_family_label_csv))
         self.room_csv_dir = room_csv_dir
         self.csvFiles = os.listdir(room_csv_dir)
+
+    def get_label_from_index(self, index):
+        return self.all_labels[index]
+
+    def get_all_labels(self):
+        return self.all_labels
 
     def __len__(self):
         return len(self.csvFiles)
@@ -46,10 +53,10 @@ class PopulationDataset(Dataset):
         # print(input_labels.shape)
 
         for index, label in enumerate(pd.Categorical(roomCsv.in_product_family.values)[1:]):
-            input_labels[index, self.all_labels.index(label)] = 1. # TODO FIX label index
-        
+            input_labels[index, self.all_labels.index(label)] = 1.  # TODO FIX label index
+
         label_sample = input_labels.flatten()
-        
+
         # sample is concatenation of npm_sample and label_sample
 
         sample = torch.nn.functional.normalize(torch.tensor(np_sample), dim=0)
