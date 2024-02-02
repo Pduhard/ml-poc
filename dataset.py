@@ -51,9 +51,10 @@ class PopulationDataset(Dataset):
         label_sample = input_labels.flatten()
         
         # sample is concatenation of npm_sample and label_sample
-
         sample = torch.nn.functional.normalize(torch.tensor(np_sample), dim=0)
-        sample = torch.cat((sample, torch.tensor(label_sample)), 0)
+        room_bb = sample[:8]
+        object_bbs = sample[8:]
+        object_types = torch.tensor(label_sample)
         target = torch.nn.functional.normalize(torch.tensor(np_target), dim=0)
 
-        return sample, target
+        return (room_bb, object_bbs, object_types), target

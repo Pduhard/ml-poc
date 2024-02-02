@@ -4,27 +4,25 @@ from torch.utils.data import DataLoader
 
 from torch.utils.data import random_split
 
-from model import RoomPopulationModel
+from model2 import RoomPopulationModel2
 from dataset import PopulationDataset
+
+## DATA AUGMENTATION IDEA: 
+## - reverse the order of the objects in the room
 
 if __name__ == "__main__":
     print(os.path)
     print(torch.__version__)
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print('Using {} device'.format(device))
 
     dataset =  PopulationDataset(
         os.path.join("/home/paco/dev/Kazaplan/poc_ai_population/plan_csv"),
         os.path.join("/home/paco/dev/Kazaplan/poc_ai_population/pfLabels.csv"),
     )
 
-    model = RoomPopulationModel(
-        input_size=dataset[0][0].shape[0],
-        output_size=dataset[0][1].shape[0],
-    ).to(device)
-    print(dataset[0][0].shape[0])
-    print(dataset[0][1].shape[0])
-
+    model = RoomPopulationModel2(
+        num_object_types=len(dataset.all_labels),
+    )
+ 
     train_data, test_data = random_split(dataset, [int(len(dataset) * 0.8), int(len(dataset) * 0.2)])
     train_dataloader = DataLoader(train_data, batch_size=4, shuffle=True)
     test_dataloader = DataLoader(test_data, batch_size=4, shuffle=True)
@@ -32,45 +30,41 @@ if __name__ == "__main__":
     #setup optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    for epoch in range(15):
+    for epoch in range(100):
         # print(f'Epoch {epoch + 1}\n-------------------------------')
 
-        ttloss = 0
+        total_loss = 0
         for batch, (train_features, train_targets) in enumerate(train_dataloader):
-            train_features, train_targets = train_features.to(device), train_targets.to(device)
             # print(f'batch {batch} : {train_features.shape} -> {train_targets.shape}')
-
+            room_bb, object_bbs, object_types = train_features
             # Compute prediction error
-            pred = model(train_features)
+            pred = model(room_bb, object_bbs, object_types)
             loss = torch.nn.functional.mse_loss(pred, train_targets)
-            print(f'loss: {loss.item()}')
-
-            ttloss += loss.item()
+            total_loss += loss.item()
 
             # Back propagation
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-        print(f'Epoch {epoch + 1} train: {ttloss / len(train_dataloader)} \n-------------------------------')
-        ttloss = 0
+        print(f'Epoch {epoch + 1} train: {total_loss / len(train_dataloader)} \n-------------------------------')
+        total_loss = 0
 
         # validation
         for batch, (test_features, test_targets) in enumerate(test_dataloader):
-            test_features, test_targets = test_features.to(device), test_targets.to(device)
-
             # Compute prediction error
-            pred = model(test_features)
+            room_bb, object_bbs, object_types = test_features
+            # Compute prediction error
+            pred = model(room_bb, object_bbs, object_types)
             loss = torch.nn.functional.mse_loss(pred, test_targets)
-            loss = torch.nn.functional.mse_loss(pred, test_targets)
-            ttloss += loss.item()
+            total_loss += loss.item()
 
-        print(f'Epoch {epoch + 1} test: {ttloss / len(test_dataloader)} \n-------------------------------')
+        print(f'Epoch {epoch + 1} test: {total_loss / len(test_dataloader)} \n-------------------------------')
 
+        if (total_loss / len(test_dataloader)) / (total_loss / len(train_dataloader)) < 0.8:
+            model.save(f'model-${str(epoch)}-ratio-${str(total_loss / len(test_dataloader)) / (total_loss / len(train_dataloader))}.pt')
     print('Done!')
     model.save("model.pt")
-
-
 
     dummy_input = torch.randn(dataset[0][0].shape[0], dtype=torch.float64)
     torch.onnx.export(model,               # model being run
