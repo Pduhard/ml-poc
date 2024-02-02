@@ -1,0 +1,3 @@
+in_product_family,in_bounding_box_x1,in_bounding_box_y1,in_bounding_box_x2,in_bounding_box_y2,in_bounding_box_x3,in_bounding_box_y3,in_bounding_box_x4,in_bounding_box_y4,out_bounding_box_x1,out_bounding_box_y1,out_bounding_box_x2,out_bounding_box_y2,out_bounding_box_x3,out_bounding_box_y3,out_bounding_box_x4,out_bounding_box_y4
+ROOM,0,0,1172.44198,0,1172.44198,457.08126000000004,0,457.08126000000004,0,0,1172.44198,0,1172.44198,457.08126000000004,0,457.08126000000004
+TABLE,-100,-45,100,-45,100,45,-100,45,-951.8084879457354,-284.43464860465264,-1151.8084879457354,-284.43464860465275,-1151.8084879457354,-374.43464860465275,-951.8084879457354,-374.43464860465264
