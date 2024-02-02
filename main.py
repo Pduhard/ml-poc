@@ -14,8 +14,8 @@ if __name__ == "__main__":
     print('Using {} device'.format(device))
 
     dataset =  PopulationDataset(
-        os.path.join("/home/paco/dev/Kazaplan/poc_ai_population/plan_csv"),
-        os.path.join("/home/paco/dev/Kazaplan/poc_ai_population/pfLabels.csv"),
+        os.path.join("plan_csv"),
+        os.path.join("pfLabels.csv"),
     )
 
     model = RoomPopulationModel(
