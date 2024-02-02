@@ -5,43 +5,46 @@ class RoomPopulationModel2(nn.Module):
     def __init__(self, num_object_types, max_objects=50):
         super(RoomPopulationModel2, self).__init__()
         
-        # Define the architecture for processing room and object bounding boxes
         self.bb_processing = nn.Sequential(
-            nn.Linear(408, 512, dtype=torch.float64),
+            nn.Linear(408, 512, dtype=torch.float32),
             nn.ReLU(),
-            nn.Linear(512, 1024, dtype=torch.float64),
+            nn.Linear(512, 1024, dtype=torch.float32),
             nn.ReLU()
         )
         
-        # Define the architecture for processing object types
         self.type_processing = nn.Sequential(
-            nn.Linear(num_object_types * max_objects, 512, dtype=torch.float64),
+            nn.Linear(num_object_types * max_objects, 512, dtype=torch.float32),
             nn.ReLU(),
-            nn.Linear(512, 1024, dtype=torch.float64),
+            nn.Linear(512, 1024, dtype=torch.float32),
             nn.ReLU(),
         )
         
-        # Define the final fully connected layers for detection
         self.detection_layers = nn.Sequential(
-            nn.Linear(2048, 4096, dtype=torch.float64),
+            nn.Linear(2048, 1024, dtype=torch.float32),
             nn.ReLU(),
-            nn.Linear(4096, 1024, dtype=torch.float64),
+            nn.Linear(1024, 256, dtype=torch.float32),
             nn.ReLU(),
-            nn.Linear(1024, 256, dtype=torch.float64),
-            nn.ReLU(),
-            nn.Linear(256, (max_objects + 1) * 8, dtype=torch.float64)  # Each object has 4 coordinates and num_object_types for one-hot encoding
+            nn.Linear(256, (max_objects + 1) * 8 * 4, dtype=torch.float32)
         )
 
-    def forward(self, room_bb, object_bbs, object_types):
-        # Process room and object bounding boxes
-        object_feats = self.bb_processing(torch.cat([room_bb, object_bbs], dim=1))  # Flatten the object_bbs tensor
-        # Process object types
+        self.max_objects = max_objects
+
+    def forward(self, x):
+        # print(x.dtype)
+        if len(x.shape) == 1:
+            x = x.unsqueeze(0)
+        object_feats, object_types = x[..., :8 + 8 * self.max_objects], x[..., 8 + 8 * self.max_objects:]
+
+        # print(object_feats.dtype)
+        # print(object_types.dtype)
+        object_feats = self.bb_processing(object_feats)
         type_feats = self.type_processing(object_types)
-        # Concatenate features
+
         combined_feats = torch.cat([object_feats, type_feats], dim=1)
-        # Final detection layers
+        # print(combined_feats.dtype)
+
         detection_out = self.detection_layers(combined_feats)
-        
+        # print(detection_out.dtype)
         return detection_out
 
     def save(self, path):
